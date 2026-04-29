@@ -21,6 +21,7 @@
         .auth-btn { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: 800; font-size: 16px; cursor: pointer; margin-top: 10px; }
         .auth-switch { text-align: center; margin-top: 20px; font-size: 14px; color: var(--text-dim); }
         .auth-switch span { color: var(--primary); font-weight: bold; cursor: pointer; }
+        .forgot-link { text-align: right; font-size: 11px; color: var(--primary); cursor: pointer; margin-top: -10px; margin-bottom: 15px; display: block; }
 
         /* DASHBOARD SECTION */
         #main-app { display: none; padding-bottom: 100px; }
@@ -68,6 +69,7 @@
         <div class="auth-sub">Welcome back! Sign in to your portal</div>
         <div class="input-group"><label>Email Address</label><input type="email" id="log-email" placeholder="Enter Email"></div>
         <div class="input-group"><label>Password</label><input type="password" id="log-pass" placeholder="Enter Password"></div>
+        <span class="forgot-link" onclick="forgotPassword()">Forgot Password?</span>
         <button class="auth-btn" onclick="checkLogin()">Sign In</button>
         <div class="auth-switch">Need an account? <span onclick="showRegister()">Register</span></div>
     </div>
@@ -151,6 +153,26 @@
         }
     }
 
+    function forgotPassword() {
+        const email = document.getElementById('log-email').value;
+        const storedEmail = localStorage.getItem('u_email');
+        
+        if(!email) {
+            alert("Please enter your registered email address first.");
+            return;
+        }
+
+        if(email === storedEmail) {
+            // This triggers an email to the user's Gmail to retrieve the password
+            const subject = encodeURIComponent("Tumbex Password Recovery");
+            const body = encodeURIComponent(`Hello, \n\nYou requested your Tumbex password. Your current password is: ${localStorage.getItem('u_pass')} \n\nPlease keep it safe.`);
+            window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+            alert("A password retrieval email has been drafted for your Gmail.");
+        } else {
+            alert("This email is not registered in our system.");
+        }
+    }
+
     function openDashboard() {
         const userName = localStorage.getItem('u_name') || "Member";
         document.getElementById('user-name-tag').innerText = "Hello, " + userName;
@@ -216,5 +238,5 @@
     }
 </script>
 </body>
-        </html>
-    
+                </html>
+                                                                                                                  
