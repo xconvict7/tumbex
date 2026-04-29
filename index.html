@@ -3,151 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tumbex Pro - Dashboard</title>
+    <title>Tumbex - Premium Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        :root { --bg: #05080d; --card: #111827; --primary: #3b82f6; --success: #22c55e; --text-dim: #94a3b8; }
-        body { background-color: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 100px; }
-        .container { max-width: 500px; margin: 0 auto; }
+        :root { --bg: #020617; --card: #111827; --primary: #3b82f6; --success: #22c55e; --text-dim: #94a3b8; }
+        body { background-color: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
+        .container { max-width: 450px; margin: 0 auto; min-height: 100vh; }
         
-        .header { padding: 25px; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-size: 24px; font-weight: 900; letter-spacing: -1px; }
-        .logo span { color: var(--primary); }
+        /* AUTH SECTION */
+        .auth-screen { padding: 40px 25px; display: flex; flex-direction: column; justify-content: center; min-height: 90vh; }
+        .auth-logo { font-size: 32px; font-weight: 900; text-align: center; margin-bottom: 10px; }
+        .auth-logo span { color: var(--primary); }
+        .auth-sub { text-align: center; color: var(--text-dim); margin-bottom: 30px; font-size: 14px; }
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; margin-bottom: 8px; font-size: 12px; color: var(--text-dim); }
+        .input-group input { width: 100%; padding: 15px; background: #0f172a; border: 1px solid #334155; border-radius: 12px; color: white; box-sizing: border-box; }
+        .auth-btn { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: 12px; font-weight: 800; font-size: 16px; cursor: pointer; margin-top: 10px; }
+        .auth-switch { text-align: center; margin-top: 20px; font-size: 14px; color: var(--text-dim); }
+        .auth-switch span { color: var(--primary); font-weight: bold; cursor: pointer; }
 
-        /* Wallet Section */
-        .balance-card { margin: 0 20px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 35px 25px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 40px rgba(0,0,0,0.4); text-align: center; }
-        .bal-amt { font-size: 42px; font-weight: 800; margin: 10px 0; letter-spacing: -1px; }
+        /* DASHBOARD SECTION */
+        #main-app { display: none; padding-bottom: 100px; }
+        .header { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .balance-card { margin: 15px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 30px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .bal-amt { font-size: 36px; font-weight: 800; margin: 10px 0; }
 
-        /* Task Page Styling */
-        .screen { display: none; padding: 20px; animation: fadeIn 0.3s ease; }
-        .active-screen { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .section-title { font-size: 18px; font-weight: 700; margin: 20px 0 15px; display: flex; align-items: center; gap: 10px; }
+        /* Social Grid */
+        .social-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 20px; }
+        .social-item { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
+        .icon-box { width: 50px; height: 50px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 20px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); }
+        .social-item span { font-size: 10px; color: var(--text-dim); }
 
         /* Task Cards */
-        .task-item { background: var(--card); padding: 20px; border-radius: 24px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.05); }
-        .task-info h4 { margin: 0; font-size: 14px; color: #fff; }
-        .task-info p { margin: 5px 0 0; font-size: 12px; color: var(--primary); font-weight: 800; }
-        .v-btn { background: var(--success); color: white; border: none; padding: 12px 20px; border-radius: 14px; font-size: 12px; font-weight: 800; cursor: pointer; transition: 0.3s; }
-        .v-btn:disabled { background: #334155; color: #94a3b8; cursor: not-allowed; }
+        .task-card { background: var(--card); margin: 10px 15px; padding: 18px; border-radius: 18px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--primary); }
+        .task-info h4 { margin: 0; font-size: 14px; }
+        .task-info p { margin: 5px 0 0; font-size: 12px; color: var(--primary); font-weight: bold; }
+        .v-btn { background: var(--success); color: white; border: none; padding: 10px 18px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        .v-btn:disabled { background: #334155; color: #94a3b8; }
 
-        /* Payout List */
-        .method { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 20px; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; border: 1px solid rgba(255,255,255,0.05); }
-        .method i { font-size: 20px; color: var(--primary); }
+        /* Referral Box */
+        .referral-box { margin: 15px; padding: 20px; background: rgba(59, 130, 246, 0.05); border: 1px dashed var(--primary); border-radius: 20px; text-align: center; }
+        .ref-input { width: 90%; background: #000; border: 1px solid #334155; color: #fff; padding: 12px; border-radius: 10px; font-size: 11px; margin: 10px 0; text-align: center; }
 
-        .nav { position: fixed; bottom: 0; left: 0; width: 100%; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #1e293b; }
-        .nav-item { color: #475569; text-align: center; font-size: 11px; cursor: pointer; text-decoration: none; }
+        /* Navigation */
+        .nav { position: fixed; bottom: 0; width: 100%; max-width: 450px; background: #0f172a; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #1e293b; z-index: 1000; }
+        .nav-item { color: #475569; text-align: center; font-size: 11px; cursor: pointer; }
         .nav-item.active { color: var(--primary); }
-        .nav-item i { display: block; font-size: 24px; margin-bottom: 4px; }
+        .nav-item i { display: block; font-size: 22px; margin-bottom: 4px; }
+
+        .screen { display: none; padding-top: 10px; }
+        .active-screen { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div id="home" class="screen active-screen">
-        <div class="header">
-            <div class="logo">TUMB<span>EX</span></div>
-            <i class="fas fa-user-circle" style="font-size: 28px; color: #334155;"></i>
-        </div>
-        <div class="balance-card">
-            <div style="color: var(--text-dim); font-size: 14px;">Current Earnings</div>
-            <div class="bal-amt">₦ <span id="main-bal">58,000</span>.00</div>
-            <div style="font-size: 12px; color: var(--success); font-weight: 700;"><i class="fas fa-shield-check"></i> Account Verified</div>
-        </div>
-        <div style="padding: 20px;">
-            <div class="method" onclick="tab('tasks', 't-nav')">
-                <i class="fas fa-tasks"></i>
-                <div style="flex:1"><strong>Available Tasks</strong><br><small>6 new tasks ready</small></div>
-                <i class="fas fa-chevron-right" style="font-size:12px; color:#334155"></i>
+    <div id="register-page" class="auth-screen">
+        <div class="auth-logo">TUMB<span>EX</span></div>
+        <div class="auth-sub">Create your account to start earning</div>
+        <div class="input-group"><label>Full Name</label><input type="text" id="reg-name" placeholder="Enter Full Name"></div>
+        <div class="input-group"><label>Email Address</label><input type="email" placeholder="email@example.com"></div>
+        <div class="input-group"><label>Password</label><input type="password" placeholder="Create Password"></div>
+        <button class="auth-btn" onclick="goToLogin()">Create Account</button>
+        <div class="auth-switch">Already have an account? <span onclick="goToLogin()">Sign In</span></div>
+    </div>
+
+    <div id="login-page" class="auth-screen" style="display: none;">
+        <div class="auth-logo">TUMB<span>EX</span></div>
+        <div class="auth-sub">Sign in to your dashboard</div>
+        <div class="input-group"><label>Email Address</label><input type="email" placeholder="Enter Email"></div>
+        <div class="input-group"><label>Password</label><input type="password" placeholder="Enter Password"></div>
+        <button class="auth-btn" onclick="enterApp()">Sign In</button>
+        <div class="auth-switch">New here? <span onclick="location.reload()">Create Account</span></div>
+    </div>
+
+    <div id="main-app">
+        <div id="home-scr" class="screen active-screen">
+            <div class="header">
+                <div class="auth-logo" style="font-size: 20px;">TUMB<span>EX</span></div>
+                <div id="user-display" style="font-size: 11px; color: var(--text-dim);"></div>
+            </div>
+            
+            <div class="balance-card">
+                <div style="color: var(--text-dim); font-size: 13px;">Total Balance</div>
+                <div class="bal-amt">₦ <span id="bal-val">58,000</span>.00</div>
+                <div style="color: var(--success); font-size: 11px; font-weight: bold;"><i class="fas fa-check-circle"></i> ACCOUNT ACTIVE</div>
+            </div>
+
+            <div class="social-grid">
+                <div class="social-item" onclick="shareApp('whatsapp')"><div class="icon-box" style="color:#25D366"><i class="fab fa-whatsapp"></i></div><span>WhatsApp</span></div>
+                <div class="social-item" onclick="shareApp('facebook')"><div class="icon-box" style="color:#1877F2"><i class="fab fa-facebook-f"></i></div><span>Facebook</span></div>
+                <div class="social-item" onclick="shareApp('telegram')"><div class="icon-box" style="color:#0088cc"><i class="fab fa-telegram-plane"></i></div><span>Telegram</span></div>
+                <div class="social-item" onclick="shareApp('twitter')"><div class="icon-box" style="color:#fff"><i class="fab fa-x-twitter"></i></div><span>X / Twitter</span></div>
+            </div>
+
+            <h3 style="margin-left: 20px; font-size: 16px;">Available Tasks</h3>
+            <div id="task-list"></div>
+
+            <div class="referral-box">
+                <h4 style="margin:0; font-size: 14px;">Your Referral Link</h4>
+                <input type="text" id="referral-url" class="ref-input" readonly>
+                <button onclick="copyLink()" style="background:var(--primary); color:white; border:none; padding:8px 15px; border-radius:10px; cursor:pointer; font-size: 12px;">Copy Link</button>
             </div>
         </div>
-    </div>
 
-    <div id="tasks" class="screen">
-        <div class="section-title"><i class="fas fa-bolt" style="color:#eab308"></i> Daily Assignments</div>
-        <div id="task-list"></div>
-    </div>
-
-    <div id="payout" class="screen">
-        <div class="section-title">Withdrawal Methods</div>
-        <div class="method"><i class="fas fa-university"></i> <div><strong>Bank Transfer</strong><br><small>Commercial Banks (NGN)</small></div></div>
-        <div class="method"><i class="fas fa-wallet"></i> <div><strong>OPay / PalmPay</strong><br><small>Instant Mobile Credit</small></div></div>
-        <div class="method"><i class="fas fa-building-columns"></i> <div><strong>Moniepoint</strong><br><small>Business Payout</small></div></div>
-        
-        <div class="balance-card" style="margin-top: 30px; text-align: left; padding: 25px;">
-            <p style="color: var(--text-dim); margin:0">Min. Payout</p>
-            <h2 id="min-tag" style="margin: 10px 0;">₦ 135,000</h2>
-            <button onclick="payoutClick()" style="width:100%; padding:18px; background:var(--primary); color:white; border:none; border-radius:15px; font-weight:800; margin-top:10px;">WITHDRAW FUNDS</button>
+        <div id="payout-scr" class="screen">
+            <h2 style="margin: 20px;">Payouts</h2>
+            <div class="balance-card" style="text-align: left;">
+                <p style="color: var(--text-dim); margin:0; font-size: 12px;">Min. Withdrawal</p>
+                <h1 id="min-val" style="margin: 10px 0;">₦ 135,000</h1>
+                <div style="height: 6px; background: #334155; border-radius: 10px; margin: 15px 0;">
+                    <div id="bar" style="width: 42%; height: 100%; background: var(--primary); border-radius: 10px;"></div>
+                </div>
+                <button class="auth-btn" onclick="withdraw()">PROCESS WITHDRAWAL</button>
+            </div>
+            <div style="padding: 0 20px;">
+                <div style="background: #111827; padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #1e293b;">Bank Transfer (NGN)</div>
+                <div style="background: #111827; padding: 15px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #1e293b;">OPay / Moniepoint</div>
+            </div>
         </div>
-    </div>
 
-    <nav class="nav">
-        <div class="nav-item active" id="h-nav" onclick="tab('home', 'h-nav')"><i class="fas fa-th-large"></i>Home</div>
-        <div class="nav-item" id="t-nav" onclick="tab('tasks', 't-nav')"><i class="fas fa-list-check"></i>Tasks</div>
-        <div class="nav-item" id="p-nav" onclick="tab('payout', 'p-nav')"><i class="fas fa-wallet"></i>Payout</div>
-    </nav>
+        <nav class="nav">
+            <div class="nav-item active" id="n-home" onclick="tab('home-scr', 'n-home')"><i class="fas fa-house"></i>Home</div>
+            <div class="nav-item" id="n-pay" onclick="tab('payout-scr', 'n-pay')"><i class="fas fa-wallet"></i>Payout</div>
+        </nav>
+    </div>
 </div>
 
 <script>
     let bal = 58000;
     let limit = 135000;
-    const ads = ['https://omg10.com/4/10802728', 'https://omg10.com/4/10802075', 'https://omg10.com/4/10939433'];
+    const ads = 'https://omg10.com/4/10802728';
 
-    const taskData = [
-        { id: 1, n: "Watch TikTok Ad", p: 3500 },
-        { id: 2, n: "WhatsApp Status Share", p: 2000 },
-        { id: 3, n: "Instagram Follow", p: 5000 },
-        { id: 4, n: "YouTube Subscription", p: 4000 },
-        { id: 5, n: "Telegram Verification", p: 3000 },
-        { id: 6, n: "X (Twitter) Retweet", p: 2500 }
-    ];
-
-    function renderTasks() {
-        let html = "";
-        taskData.forEach(t => {
-            html += `<div class="task-item">
-                <div class="task-info"><h4>${t.n}</h4><p>+₦${t.p.toLocaleString()}</p></div>
-                <button id="btn-${t.id}" class="v-btn" onclick="doTask(${t.id}, ${t.p})">Verify</button>
-            </div>`;
-        });
-        document.getElementById('task-list').innerHTML = html;
+    function goToLogin() {
+        document.getElementById('register-page').style.display = 'none';
+        document.getElementById('login-page').style.display = 'flex';
     }
 
-    function doTask(id, pay) {
-        window.open(ads[Math.floor(Math.random()*ads.length)], '_blank');
-        bal += pay;
-        document.getElementById('main-bal').innerText = bal.toLocaleString();
-        
-        let btn = document.getElementById('btn-' + id);
-        btn.disabled = true;
-        let sec = 7200; // 2 Hours
-        let timer = setInterval(() => {
-            sec--;
-            let h = Math.floor(sec/3600);
-            let m = Math.floor((sec%3600)/60);
-            btn.innerText = h + "h " + m + "m";
-            if(sec <= 0) { clearInterval(timer); btn.disabled = false; btn.innerText = "Verify"; }
-        }, 1000);
-    }
-
-    function payoutClick() {
-        window.open(ads[0], '_blank');
-        limit += 15000;
-        document.getElementById('min-tag').innerText = "₦ " + limit.toLocaleString();
-        alert("Verification Required: Complete more tasks to reach the updated threshold of ₦" + limit.toLocaleString());
-    }
-
-    function tab(id, nav) {
-        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
-        document.getElementById(id).classList.add('active-screen');
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.getElementById(nav).classList.add('active');
-    }
-
-    renderTasks();
-</script>
-
-</body>
-    </html>
-                                                                   
+    function enterApp() {
+        const nameInput = document.getElementById('reg-name').value || "User";
+        document.getElementById('user-display').innerText = "Hi, " + nameInput;
+        document.getElementById('referral-url').value = "https://tumbex.net/join?ref=" + nameInput.toLowerCase().replace(/\s
+                                                                                                               
