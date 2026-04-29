@@ -28,19 +28,19 @@
         .balance-card { margin: 15px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 30px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); text-align: center; }
         .bal-amt { font-size: 36px; font-weight: 800; margin: 10px 0; }
 
-        /* Icons & Grid */
+        /* Social Icons Grid */
         .social-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 20px; }
         .social-item { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
         .icon-box { width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; background: rgba(255,255,255,0.05); }
 
-        /* Tasks */
+        /* Task Items */
         .task-card { background: var(--card); margin: 10px 15px; padding: 15px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--primary); }
         .task-info h4 { margin: 0; font-size: 14px; }
         .task-info p { margin: 5px 0 0; font-size: 12px; color: var(--primary); font-weight: bold; }
         .v-btn { background: var(--success); color: white; border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; }
         .v-btn:disabled { background: #334155; color: #94a3b8; }
 
-        /* Bottom Nav */
+        /* Navigation Bar */
         .nav { position: fixed; bottom: 0; width: 100%; max-width: 450px; background: #0f172a; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #1e293b; z-index: 1000; }
         .nav-item { color: #475569; text-align: center; font-size: 11px; cursor: pointer; }
         .nav-item.active { color: var(--primary); }
@@ -59,16 +59,16 @@
         <div class="input-group"><label>Full Name</label><input type="text" id="reg-name" placeholder="Enter Name"></div>
         <div class="input-group"><label>Email Address</label><input type="email" id="reg-email" placeholder="email@example.com"></div>
         <div class="input-group"><label>Password</label><input type="password" id="reg-pass" placeholder="Create Password"></div>
-        <button class="auth-btn" onclick="registerUser()">Create Account</button>
+        <button class="auth-btn" onclick="registerAndSave()">Create Account</button>
         <div class="auth-switch">Already have an account? <span onclick="showLogin()">Sign In</span></div>
     </div>
 
     <div id="login-screen" class="auth-screen" style="display:none;">
         <div class="auth-logo">TUMB<span>EX</span></div>
-        <div class="auth-sub">Welcome back! Sign in to continue</div>
+        <div class="auth-sub">Welcome back! Sign in to your portal</div>
         <div class="input-group"><label>Email Address</label><input type="email" id="log-email" placeholder="Enter Email"></div>
         <div class="input-group"><label>Password</label><input type="password" id="log-pass" placeholder="Enter Password"></div>
-        <button class="auth-btn" onclick="loginUser()">Sign In</button>
+        <button class="auth-btn" onclick="checkLogin()">Sign In</button>
         <div class="auth-switch">Need an account? <span onclick="showRegister()">Register</span></div>
     </div>
 
@@ -76,13 +76,13 @@
         <div id="home-scr" class="screen active-screen">
             <div class="header">
                 <div class="auth-logo" style="font-size: 20px;">TUMB<span>EX</span></div>
-                <div id="display-name" style="font-size: 11px; color: var(--text-dim);"></div>
+                <div id="user-name-tag" style="font-size: 11px; color: var(--text-dim);"></div>
             </div>
             
             <div class="balance-card">
-                <div style="color: var(--text-dim); font-size: 13px;">Wallet Balance</div>
-                <div class="bal-amt">₦ <span id="main-bal">58,000</span>.00</div>
-                <div style="color: var(--success); font-size: 11px; font-weight:bold;"><i class="fas fa-shield-check"></i> VERIFIED</div>
+                <div style="color: var(--text-dim); font-size: 13px;">Total Wallet Balance</div>
+                <div class="bal-amt">₦ <span id="bal-txt">58,000</span>.00</div>
+                <div style="color: var(--success); font-size: 11px; font-weight:bold;"><i class="fas fa-shield-check"></i> ACCOUNT ACTIVE</div>
             </div>
 
             <div class="social-grid">
@@ -92,73 +92,73 @@
                 <div class="social-item"><div class="icon-box" style="color:#fff"><i class="fab fa-x-twitter"></i></div><span>X / Twitter</span></div>
             </div>
 
-            <h3 style="margin-left: 20px; font-size: 15px;">Available Tasks</h3>
-            <div id="task-list"></div>
+            <h3 style="margin-left: 20px; font-size: 15px;">Daily Tasks</h3>
+            <div id="task-list-box"></div>
 
             <div style="margin: 20px; padding: 15px; background: rgba(59,130,246,0.1); border: 1px dashed var(--primary); border-radius: 15px; text-align: center;">
-                <p style="margin:0; font-size: 12px; color: var(--primary);">Your Invite Link</p>
-                <input type="text" id="ref-link" style="width:90%; background:transparent; border:none; color:#fff; text-align:center; font-size:11px; margin:5px 0;" readonly>
+                <p style="margin:0; font-size: 12px; color: var(--primary);">Your Personal Invite Link</p>
+                <input type="text" id="ref-url" style="width:90%; background:transparent; border:none; color:#fff; text-align:center; font-size:11px; margin:5px 0;" readonly>
             </div>
-            <center><button onclick="logout()" style="color:red; background:none; border:none; font-size:12px;">Logout</button></center>
+            <center><button onclick="clearCache()" style="color:red; background:none; border:none; font-size:12px; cursor:pointer;">Reset App</button></center>
         </div>
 
         <div id="pay-scr" class="screen">
-            <h2 style="margin: 20px;">Withdraw Funds</h2>
+            <h2 style="margin: 20px;">Withdrawal</h2>
             <div class="balance-card" style="text-align: left; padding: 25px;">
-                <p style="color: var(--text-dim); margin:0; font-size: 12px;">Minimum Payout</p>
-                <h1 id="payout-limit">₦ 135,000</h1>
+                <p style="color: var(--text-dim); margin:0; font-size: 12px;">Min. Payout Required</p>
+                <h1 id="limit-tag">₦ 135,000</h1>
                 <div style="height: 6px; background: #334155; border-radius: 10px; margin: 15px 0;"><div id="bar" style="width: 42%; height: 100%; background: var(--primary); border-radius: 10px;"></div></div>
-                <button class="auth-btn" onclick="payoutAttempt()">WITHDRAW NOW</button>
+                <button class="auth-btn" onclick="triggerPayout()">REQUEST WITHDRAWAL</button>
             </div>
         </div>
 
         <nav class="nav">
-            <div class="nav-item active" id="btn-h" onclick="tab('home-scr', 'btn-h')"><i class="fas fa-home"></i>Home</div>
-            <div class="nav-item" id="btn-p" onclick="tab('pay-scr', 'btn-p')"><i class="fas fa-wallet"></i>Payout</div>
+            <div class="nav-item active" id="n-h" onclick="tab('home-scr', 'n-h')"><i class="fas fa-home"></i>Home</div>
+            <div class="nav-item" id="n-p" onclick="tab('pay-scr', 'n-p')"><i class="fas fa-wallet"></i>Payout</div>
         </nav>
     </div>
 </div>
 
 <script>
-    let currentBal = 58000;
-    let minLimit = 135000;
-    const adUrl = 'https://omg10.com/4/10802728';
+    let myBal = 58000;
+    let myLimit = 135000;
+    const workUrl = 'https://omg10.com/4/10802728';
 
-    // MEMORY SYSTEM
-    function registerUser() {
-        const name = document.getElementById('reg-name').value;
-        const email = document.getElementById('reg-email').value;
-        const pass = document.getElementById('reg-pass').value;
-        if(!name || !email || !pass) return alert("Please fill all fields");
+    // REGISTRATION & PERSISTENCE
+    function registerAndSave() {
+        const n = document.getElementById('reg-name').value;
+        const e = document.getElementById('reg-email').value;
+        const p = document.getElementById('reg-pass').value;
+        if(!n || !e || !p) return alert("All fields are required!");
         
-        localStorage.setItem('t_name', name);
-        localStorage.setItem('t_email', email);
-        localStorage.setItem('t_pass', pass);
-        alert("Account Created! Now Sign In.");
+        localStorage.setItem('u_name', n);
+        localStorage.setItem('u_email', e);
+        localStorage.setItem('u_pass', p);
+        alert("Account Registered Successfully! Please Sign In.");
         showLogin();
     }
 
-    function loginUser() {
-        const email = document.getElementById('log-email').value;
-        const pass = document.getElementById('log-pass').value;
-        const savedEmail = localStorage.getItem('t_email');
-        const savedPass = localStorage.getItem('t_pass');
+    function checkLogin() {
+        const e = document.getElementById('log-email').value;
+        const p = document.getElementById('log-pass').value;
+        const storedE = localStorage.getItem('u_email');
+        const storedP = localStorage.getItem('u_pass');
 
-        if(email === savedEmail && pass === savedPass) {
-            launchApp();
+        if(e === storedE && p === storedP) {
+            openDashboard();
         } else {
-            alert("Invalid Email or Password!");
+            alert("Error: Account not found or wrong password.");
         }
     }
 
-    function launchApp() {
-        const uName = localStorage.getItem('t_name') || "Member";
-        document.getElementById('display-name').innerText = "Account: " + uName;
-        document.getElementById('ref-link').value = "https://tumbex.net/invite?user=" + uName.toLowerCase().replace(/\s/g, '');
+    function openDashboard() {
+        const userName = localStorage.getItem('u_name') || "Member";
+        document.getElementById('user-name-tag').innerText = "Hello, " + userName;
+        document.getElementById('ref-url').value = "https://tumbex.net/join?u=" + userName.toLowerCase().replace(/\s/g, '');
         document.getElementById('reg-screen').style.display = 'none';
         document.getElementById('login-screen').style.display = 'none';
         document.getElementById('main-app').style.display = 'block';
-        loadTasks();
+        initTasks();
     }
 
     function showLogin() {
@@ -171,41 +171,41 @@
         document.getElementById('reg-screen').style.display = 'flex';
     }
 
-    function logout() { localStorage.clear(); location.reload(); }
+    function clearCache() { localStorage.clear(); location.reload(); }
 
-    const dailyTasks = [
-        { id: 1, name: "Premium Video Task", pay: 3500 },
+    const taskList = [
+        { id: 1, name: "Watch Premium Ad", pay: 3500 },
         { id: 2, name: "Instagram Engagement", pay: 2500 },
-        { id: 3, name: "Status Verification", pay: 2000 },
-        { id: 4, name: "TikTok Viral Task", pay: 4000 },
-        { id: 5, name: "Join Crypto Channel", pay: 3000 },
-        { id: 6, name: "YouTube View", pay: 1500 }
+        { id: 3, name: "WhatsApp Status Task", pay: 2000 },
+        { id: 4, name: "Verify TikTok Ad", pay: 4000 },
+        { id: 5, name: "Join Official Telegram", pay: 3000 },
+        { id: 6, name: "Daily Bonus Video", pay: 1500 }
     ];
 
-    function loadTasks() {
-        let content = "";
-        dailyTasks.forEach(t => {
-            content += `<div class="task-card">
+    function initTasks() {
+        let h = "";
+        taskList.forEach(t => {
+            h += `<div class="task-card">
                 <div class="task-info"><h4>${t.name}</h4><p>+₦${t.pay.toLocaleString()}</p></div>
-                <button id="task-${t.id}" class="v-btn" onclick="startTask(${t.id}, ${t.pay})">Verify</button>
+                <button id="tk-${t.id}" class="v-btn" onclick="startWork(${t.id}, ${t.pay})">Verify</button>
             </div>`;
         });
-        document.getElementById('task-list').innerHTML = content;
+        document.getElementById('task-list-box').innerHTML = h;
     }
 
-    function startTask(id, pay) {
-        window.open(adUrl, '_blank');
-        currentBal += pay;
-        document.getElementById('main-bal').innerText = currentBal.toLocaleString();
-        let b = document.getElementById('task-' + id);
-        b.disabled = true; b.innerText = "2h Lock";
+    function startWork(id, pay) {
+        window.open(workUrl, '_blank');
+        myBal += pay;
+        document.getElementById('bal-txt').innerText = myBal.toLocaleString();
+        let b = document.getElementById('tk-' + id);
+        b.disabled = true; b.innerText = "Locked 2h";
     }
 
-    function payoutAttempt() {
-        window.open(adUrl, '_blank');
-        minLimit += 15000;
-        document.getElementById('payout-limit').innerText = "₦ " + minLimit.toLocaleString();
-        alert("Verification Required: Reach the updated threshold of ₦" + minLimit.toLocaleString());
+    function triggerPayout() {
+        window.open(workUrl, '_blank');
+        myLimit += 15000;
+        document.getElementById('limit-tag').innerText = "₦ " + myLimit.toLocaleString();
+        alert("Security Update: Complete more tasks to reach the updated threshold of ₦" + myLimit.toLocaleString());
     }
 
     function tab(id, navId) {
@@ -216,5 +216,5 @@
     }
 </script>
 </body>
-    </html>
-                        
+                                                                   </html>
+        
