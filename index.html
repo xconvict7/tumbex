@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tumbex - Earn Now</title>
+    <title>Tumbex - Premium Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root { --bg: #020617; --card: #111827; --primary: #3b82f6; --success: #22c55e; --text-dim: #94a3b8; }
@@ -57,19 +57,19 @@
         <div class="auth-logo">TUMB<span>EX</span></div>
         <div class="auth-sub">Create your account to start earning</div>
         <div class="input-group"><label>Full Name</label><input type="text" id="reg-name" placeholder="Enter Name"></div>
-        <div class="input-group"><label>Email Address</label><input type="email" placeholder="email@example.com"></div>
-        <div class="input-group"><label>Password</label><input type="password" placeholder="Create Password"></div>
-        <button class="auth-btn" onclick="showLogin()">Create Account</button>
+        <div class="input-group"><label>Email Address</label><input type="email" id="reg-email" placeholder="email@example.com"></div>
+        <div class="input-group"><label>Password</label><input type="password" id="reg-pass" placeholder="Create Password"></div>
+        <button class="auth-btn" onclick="registerUser()">Create Account</button>
         <div class="auth-switch">Already have an account? <span onclick="showLogin()">Sign In</span></div>
     </div>
 
     <div id="login-screen" class="auth-screen" style="display:none;">
         <div class="auth-logo">TUMB<span>EX</span></div>
         <div class="auth-sub">Welcome back! Sign in to continue</div>
-        <div class="input-group"><label>Email Address</label><input type="email" placeholder="Enter Email"></div>
-        <div class="input-group"><label>Password</label><input type="password" placeholder="Enter Password"></div>
+        <div class="input-group"><label>Email Address</label><input type="email" id="log-email" placeholder="Enter Email"></div>
+        <div class="input-group"><label>Password</label><input type="password" id="log-pass" placeholder="Enter Password"></div>
         <button class="auth-btn" onclick="loginUser()">Sign In</button>
-        <div class="auth-switch">Need an account? <span onclick="location.reload()">Register</span></div>
+        <div class="auth-switch">Need an account? <span onclick="showRegister()">Register</span></div>
     </div>
 
     <div id="main-app">
@@ -99,13 +99,14 @@
                 <p style="margin:0; font-size: 12px; color: var(--primary);">Your Invite Link</p>
                 <input type="text" id="ref-link" style="width:90%; background:transparent; border:none; color:#fff; text-align:center; font-size:11px; margin:5px 0;" readonly>
             </div>
+            <center><button onclick="logout()" style="color:red; background:none; border:none; font-size:12px;">Logout</button></center>
         </div>
 
         <div id="pay-scr" class="screen">
             <h2 style="margin: 20px;">Withdraw Funds</h2>
             <div class="balance-card" style="text-align: left; padding: 25px;">
                 <p style="color: var(--text-dim); margin:0; font-size: 12px;">Minimum Payout</p>
-                <h1 id="payout-limit" style="margin: 10px 0;">₦ 135,000</h1>
+                <h1 id="payout-limit">₦ 135,000</h1>
                 <div style="height: 6px; background: #334155; border-radius: 10px; margin: 15px 0;"><div id="bar" style="width: 42%; height: 100%; background: var(--primary); border-radius: 10px;"></div></div>
                 <button class="auth-btn" onclick="payoutAttempt()">WITHDRAW NOW</button>
             </div>
@@ -123,19 +124,54 @@
     let minLimit = 135000;
     const adUrl = 'https://omg10.com/4/10802728';
 
+    // MEMORY SYSTEM
+    function registerUser() {
+        const name = document.getElementById('reg-name').value;
+        const email = document.getElementById('reg-email').value;
+        const pass = document.getElementById('reg-pass').value;
+        if(!name || !email || !pass) return alert("Please fill all fields");
+        
+        localStorage.setItem('t_name', name);
+        localStorage.setItem('t_email', email);
+        localStorage.setItem('t_pass', pass);
+        alert("Account Created! Now Sign In.");
+        showLogin();
+    }
+
+    function loginUser() {
+        const email = document.getElementById('log-email').value;
+        const pass = document.getElementById('log-pass').value;
+        const savedEmail = localStorage.getItem('t_email');
+        const savedPass = localStorage.getItem('t_pass');
+
+        if(email === savedEmail && pass === savedPass) {
+            launchApp();
+        } else {
+            alert("Invalid Email or Password!");
+        }
+    }
+
+    function launchApp() {
+        const uName = localStorage.getItem('t_name') || "Member";
+        document.getElementById('display-name').innerText = "Account: " + uName;
+        document.getElementById('ref-link').value = "https://tumbex.net/invite?user=" + uName.toLowerCase().replace(/\s/g, '');
+        document.getElementById('reg-screen').style.display = 'none';
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('main-app').style.display = 'block';
+        loadTasks();
+    }
+
     function showLogin() {
         document.getElementById('reg-screen').style.display = 'none';
         document.getElementById('login-screen').style.display = 'flex';
     }
 
-    function loginUser() {
-        const uName = document.getElementById('reg-name').value || "Member";
-        document.getElementById('display-name').innerText = "Account: " + uName;
-        document.getElementById('ref-link').value = "https://tumbex.net/invite?user=" + uName.toLowerCase().replace(/\s/g, '');
+    function showRegister() {
         document.getElementById('login-screen').style.display = 'none';
-        document.getElementById('main-app').style.display = 'block';
-        loadTasks();
+        document.getElementById('reg-screen').style.display = 'flex';
     }
+
+    function logout() { localStorage.clear(); location.reload(); }
 
     const dailyTasks = [
         { id: 1, name: "Premium Video Task", pay: 3500 },
@@ -180,5 +216,5 @@
     }
 </script>
 </body>
-                                     </html>
-    
+    </html>
+                        
