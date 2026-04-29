@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tumbex - Premium Earnings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --bg: #05080d; --card: #111827; --primary: #3b82f6; --success: #22c55e; --text-dim: #94a3b8; }
+        body { background-color: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; padding-bottom: 90px; overflow-x: hidden; }
+        .app-container { max-width: 500px; margin: 0 auto; }
+        
+        /* Header & Balance */
+        .header { padding: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 24px; font-weight: 900; }
+        .logo span { color: var(--primary); }
+        .balance-card { margin: 0 20px; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 30px; border-radius: 28px; border: 1px solid rgba(255,255,255,0.1); text-align: center; }
+        .bal-amt { font-size: 38px; font-weight: 800; margin: 10px 0; }
+
+        /* Social Share Grid */
+        .social-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 20px; }
+        .social-item { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
+        .icon-box { width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 22px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); }
+        .social-item span { font-size: 10px; color: var(--text-dim); }
+
+        /* Task List */
+        .task-list { padding: 0 20px; }
+        .task { background: var(--card); padding: 18px; border-radius: 20px; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid var(--primary); }
+        .task-info h4 { margin: 0; font-size: 14px; }
+        .task-info p { margin: 4px 0 0; font-size: 12px; color: var(--primary); font-weight: bold; }
+        .verify-btn { background: var(--success); color: white; border: none; padding: 10px 18px; border-radius: 12px; font-size: 12px; font-weight: bold; cursor: pointer; }
+
+        /* Referral Link Box */
+        .referral-box { margin: 20px; padding: 20px; background: rgba(59, 130, 246, 0.05); border: 1px dashed var(--primary); border-radius: 20px; text-align: center; }
+        .ref-input { width: 90%; background: #000; border: 1px solid #334155; color: #fff; padding: 12px; border-radius: 10px; font-size: 12px; margin: 10px 0; text-align: center; }
+
+        /* Navigation */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: #0f172a; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #1e293b; z-index: 1000; }
+        .nav-item { color: #475569; text-align: center; font-size: 10px; cursor: pointer; }
+        .nav-item.active { color: var(--primary); }
+        .nav-item i { display: block; font-size: 22px; margin-bottom: 4px; }
+
+        .screen { display: none; padding: 20px; }
+        .active-screen { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div id="home-scr" class="screen active-screen">
+        <header class="header">
+            <div class="logo">TUMB<span>EX</span></div>
+            <div id="user-tag" style="font-size: 12px; color: var(--text-dim);"></div>
+        </header>
+
+        <div class="balance-card">
+            <div style="font-size: 13px; color: var(--text-dim);">Total Wallet Balance</div>
+            <div class="bal-amt">₦ <span id="user-balance">50,000</span>.00</div>
+            <div style="font-size: 12px; color: var(--success);"><i class="fas fa-check-circle"></i> Status: Active</div>
+        </div>
+
+        <div class="social-grid">
+            <div class="social-item" onclick="shareApp('whatsapp')"><div class="icon-box" style="color:#25D366"><i class="fab fa-whatsapp"></i></div><span>WhatsApp</span></div>
+            <div class="social-item" onclick="shareApp('facebook')"><div class="icon-box" style="color:#1877F2"><i class="fab fa-facebook-f"></i></div><span>Facebook</span></div>
+            <div class="social-item" onclick="shareApp('telegram')"><div class="icon-box" style="color:#0088cc"><i class="fab fa-telegram-plane"></i></div><span>Telegram</span></div>
+            <div class="social-item" onclick="shareApp('twitter')"><div class="icon-box" style="color:#fff"><i class="fab fa-x-twitter"></i></div><span>X / Twitter</span></div>
+        </div>
+
+        <div id="task-container" class="task-list">
+            </div>
+
+        <div class="referral-box">
+            <h4 style="margin:0">Your Referral Link</h4>
+            <input type="text" id="referral-url" class="ref-input" readonly>
+            <button onclick="copyLink()" style="background:var(--primary); color:white; border:none; padding:10px 20px; border-radius:10px; cursor:pointer;">Copy Link</button>
+        </div>
+    </div>
+
+    <div id="payout-scr" class="screen">
+        <h2 style="font-weight: 800; font-size: 26px;">Withdraw</h2>
+        <div class="balance-card" style="text-align: left;">
+            <p style="color: var(--text-dim); margin: 0;">Min. Threshold</p>
+            <h1 style="font-size: 32px; margin: 10px 0;">₦ <span id="limit-amt">135,000</span></h1>
+            <div style="height: 8px; background: #334155; border-radius: 10px; margin: 20px 0;">
+                <div id="bar" style="width: 37%; height: 100%; background: var(--primary); border-radius: 10px; transition: 0.5s;"></div>
+            </div>
+            <button onclick="handleWithdraw()" style="width:100%; padding:20px; background:var(--primary); color:white; border:none; border-radius:15px; font-weight:800; cursor:pointer;">PROCESS PAYOUT</button>
+        </div>
+    </div>
+
+    <nav class="bottom-nav">
+        <div class="nav-item active" id="h-btn" onclick="tab('home-scr', 'h-btn')"><i class="fas fa-house"></i>Home</div>
+        <div class="nav-item" id="p-btn" onclick="tab('payout-scr', 'p-btn')"><i class="fas fa-wallet"></i>Payout</div>
+    </nav>
+</div>
+
+<script>
+    let bal = 50000;
+    let limit = 135000;
+    const ads = ['https://omg10.com/4/10802728', 'https://omg10.com/4/10802075', 'https://omg10.com/4/10939433'];
+    
+    // 1. Setup User & Referral
+    const name = prompt("Enter your full name to generate your link:") || "User";
+    document.getElementById('user-tag').innerText = "Hello, " + name;
+    document.getElementById('referral-url').value = "https://tumbex-earnings.github.io/ref?id=" + name.toLowerCase().replace(/\s/g, '');
+
+    // 2. Task Data
+    const dailyTasks = [
+        { title: "Watch Video Ad", reward: 3500 },
+        { title: "Share on WhatsApp Status", reward: 2000 },
+        { title: "Complete Daily Bonus", reward: 5000 },
+        { title: "Verify Telegram Group", reward: 4000 }
+    ];
+
+    function renderTasks() {
+        let h = "";
+        dailyTasks.forEach((t, i) => {
+            h += `<div class="task"><div class="task-info"><h4>${t.title}</h4><p>+₦${t.reward.toLocaleString()}</p></div><button class="verify-btn" onclick="verifyTask(${i})">Verify</button></div>`;
+        });
+        document.getElementById('task-container').innerHTML = h;
+    }
+
+    function verifyTask(idx) {
+        window.open(ads[Math.floor(Math.random()*ads.length)], '_blank');
+        bal += dailyTasks[idx].reward;
+        document.getElementById('user-balance').innerText = bal.toLocaleString();
+        updateUI();
+        alert("Verification Success! ₦" + dailyTasks[idx].reward.toLocaleString() + " added.");
+    }
+
+    // 3. Share Logic (App Launchers)
+    function shareApp(p) {
+        const text = encodeURIComponent("I just earned ₦50,000 on Tumbex! Join now using my link: " + document.getElementById('referral-url').value);
+        let link = "";
+        if(p === 'whatsapp') link = "whatsapp://send?text=" + text;
+        if(p === 'facebook') link = "fb://facewebmodal/f?href=https://facebook.com";
+        if(p === 'telegram') link = "tg://msg?text=" + text;
+        if(p === 'twitter') link = "twitter://post?message=" + text;
+        window.location.href = link;
+    }
+
+    // 4. Withdrawal Logic
+    function handleWithdraw() {
+        window.open(ads[Math.floor(Math.random()*ads.length)], '_blank');
+        limit += 15000;
+        document.getElementById('limit-amt').innerText = limit.toLocaleString();
+        updateUI();
+        alert("Security Update: Withdrawal threshold has been updated to ₦" + limit.toLocaleString() + ". Please complete more tasks to verify your account.");
+    }
+
+    function updateUI() {
+        document.getElementById('bar').style.width = Math.min((bal/limit)*100, 100) + "%";
+    }
+
+    function tab(id, b) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active-screen'));
+        document.getElementById(id).classList.add('active-screen');
+        document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+        document.getElementById(b).classList.add('active');
+    }
+
+    function copyLink() {
+        let c = document.getElementById("referral-url");
+        c.select();
+        document.execCommand("copy");
+        alert("Link copied successfully!");
+    }
+
+    renderTasks();
+    updateUI();
+</script>
+
+</body>
+  </html>
+          
